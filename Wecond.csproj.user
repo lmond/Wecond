@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
+    <UseEmulator>true</UseEmulator>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Source>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</Source>
+    <SmallTileSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</SmallTileSource>
+    <MediumTileSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</MediumTileSource>
+    <WideTileSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</WideTileSource>
+    <LargeTileSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</LargeTileSource>
+    <AppIconSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</AppIconSource>
+    <SplashScreenSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</SplashScreenSource>
+    <PackageLogoSource>C:\Users\armen\source\repos\Wecond\Wecond\Assets\Icons\02n.png</PackageLogoSource>
+    <AppxShowAllApps>True</AppxShowAllApps>
+    <AppxPackageIsForStore>True</AppxPackageIsForStore>
+    <AppxBuildConfigurationSelection>x86|x64|arm</AppxBuildConfigurationSelection>
+    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
+    <UapAppxPackageBuildMode>StoreOnly</UapAppxPackageBuildMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
+    <UseEmulator>true</UseEmulator>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
+    <UseEmulator>false</UseEmulator>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,94 @@
+﻿<Page
+    x:Class="Wecond.Views.Favorites"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wecond.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:common="using:Wecond.Common"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <common:AcrylicBrush Grid.ColumnSpan="2" Color="{StaticResource FavoritesPageBackground}"/>
+        <Grid Padding="40,60" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Row="0">
+                <TextBlock x:Uid="FavoritePlaces" FontFamily="Myriad Pro" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" Margin="15" Foreground="{StaticResource DefaultTextForeground}" />
+                <TextBlock x:Name="NoPlaces" x:Uid="NoPlaces" Visibility="Collapsed" MaxWidth="600" TextWrapping="Wrap" TextAlignment="Center" FontFamily="Myriad Pro" FontSize="22" HorizontalAlignment="Center" Margin="15,0,15,15" Foreground="{StaticResource DefaultTextForeground}" />
+            </StackPanel>
+            <controls:AdaptiveGridView 
+                x:Name="SavedPlacesGridView"
+                Grid.Row="1"
+                ItemHeight="180"
+                DesiredWidth="220"
+                SelectionMode="None"
+                IsItemClickEnabled="True"
+                ItemClick="SavedPlacesGridView_ItemClick">
+                <controls:AdaptiveGridView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:DropShadowPanel 
+                            BlurRadius="8"
+                            ShadowOpacity="0.3"
+                            OffsetX="2"
+                            OffsetY="2"
+                            Color="Black"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <controls:ImageEx 
+                                    Grid.RowSpan="2"
+                                    Height="180"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    IsCacheEnabled="False"
+                                    Source="{Binding CoverImage}"
+                                    Stretch="UniformToFill" />
+                                <Grid Grid.Row="0">
+                                    <Grid.Background>
+                                        <SolidColorBrush Color="Black" Opacity=".2"/>
+                                    </Grid.Background>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+                                            <TextBlock FontSize="48" HorizontalAlignment="Center" FontFamily="Segoe UI" Foreground="#e6e6e6" >
+                                                <Run Text="{Binding Current.main.temp, FallbackValue='11'}" />°
+                                            </TextBlock>
+                                            <Border BorderThickness="0" CornerRadius="7">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity="0.5"/>
+                                                </Border.Background>
+                                                <TextBlock Text="{Binding Current.Date, FallbackValue='Fri, 08 Dec'}" Padding="8,6" Foreground="{StaticResource SecondaryTextForeground}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Margin="0,-5,0,0">
+                                            <Image Source="{Binding Current.Image, FallbackValue='ms-appx:///Assets/Icons/01d.png'}" Width="70"/>
+                                            <TextBlock Text="{Binding Current.weather[0].description, FallbackValue=Clouds, TargetNullValue=Clouds}" FontSize="14" Foreground="#e6e6e6" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="1" Padding="10,5,0,5">
+                                    <Grid.Background>
+                                        <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity=".7"/>
+                                    </Grid.Background>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding PlaceInfo.DisplayName}" FontFamily="Myriad Pro" FontSize="16" Foreground="{StaticResource SecondaryTextForeground}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,7,0,0"/>
+                                    <Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Background="Transparent" Foreground="#F22F08" HorizontalAlignment="Right" Style="{StaticResource DefaultButton}" Click="RemovePlaceFormFavorites" Tag="{Binding PlaceInfo.PlaceId}" />
+                                </Grid>
+                            </Grid>
+                        </controls:DropShadowPanel>
+                    </DataTemplate>
+                </controls:AdaptiveGridView.ItemTemplate>
+            </controls:AdaptiveGridView>
+        </Grid>
+    </Grid>
+</Page>

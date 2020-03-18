@@ -1,0 +1,100 @@
+﻿<Page
+    x:Class="Wecond.Views.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wecond.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:common="using:Wecond.Common"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent" x:Name="MainGrid">
+        <common:AcrylicBrush Color="{StaticResource SettingsPageBackground}"/>
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20">
+            <StackPanel Orientation="Vertical">
+                <TextBlock x:Name="SettingsHeader" x:Uid="Settings" Text="Settings" Foreground="{StaticResource DefaultTextForeground}" FontSize="48" FontFamily="Myriad Pro" FontWeight="Bold" Margin="10" HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <AutoSuggestBox x:Name="DefaultLocation" Width="380" x:Uid="MyDefaultLocation" PlaceholderText="My Default Location is..." FontSize="24" TextChanged="DefaultLocation_TextChanged" SuggestionChosen="DefaultLocation_SuggestionChosen" TextMemberPath="CityDisplayName" DisplayMemberPath="CityDisplayName" />
+                    <Button x:Name="DetectLocation" FontFamily="Segoe MDL2 Assets" Content="&#xEC43;" Foreground="{StaticResource DefaultTextForeground}" Background="Transparent"  Margin="-35,0,0,0" Style="{StaticResource DefaultButton}" Click="DetectLocation_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                    <StackPanel x:Name="LocationInfoStack" Orientation="Vertical" Visibility="Collapsed">
+                        <ProgressBar x:Name="LocationProgress" Width="380" IsIndeterminate="True" Foreground="{StaticResource DefaultTextForeground}" Background="Transparent" Margin="0,10,0,0"/>
+                        <TextBlock x:Name="LocatingYou" Width="380" x:Uid="LocatingYou" Visibility="Collapsed" FontFamily="Myriad Pro" FontSize="16" Margin="0,10,0,0" VerticalAlignment="Center" Foreground="{StaticResource DefaultTextForeground}"/>
+                        <TextBlock x:Name="CantLocateYou" Width="380" x:Uid="CantLocateYou" Visibility="Collapsed" FontFamily="Myriad Pro" FontSize="16" Margin="0,10,0,0" VerticalAlignment="Center" Foreground="{StaticResource DefaultTextForeground}"/>
+                    </StackPanel>
+                    <CheckBox x:Name="AlwaysDetect" x:Uid="AlwaysDetect" Content="Always detect my location" Width="380" HorizontalAlignment="Center" IsThreeState="False" Foreground="{StaticResource DefaultTextForeground}" />
+                </StackPanel>
+                <StackPanel BorderThickness="0,1,0,0" BorderBrush="{StaticResource DefaultTextForeground}" Padding="0,10">
+                    <TextBlock x:Uid="Language" Text="Language" Foreground="{StaticResource DefaultTextForeground}" />
+                    <ComboBox x:Name="Languages" Margin="0,5,0,0" Width="380" DisplayMemberPath="Value"/>
+                </StackPanel>
+                <StackPanel BorderThickness="0,1,0,0" BorderBrush="{StaticResource DefaultTextForeground}" Padding="0,10">
+                    <TextBlock x:Uid="Theme" Foreground="{StaticResource DefaultTextForeground}" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="Themes0" GroupName="Themes" x:Uid="Colored" Tag="Colored" Checked="RadioButtonChecked" />
+                        <RadioButton x:Name="Themes1" GroupName="Themes" x:Uid="Light" Tag="Light" Checked="RadioButtonChecked" />
+                        <RadioButton x:Name="Themes2" GroupName="Themes" x:Uid="Dark" Tag="Dark" Checked="RadioButtonChecked" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel BorderThickness="0,1,0,1" BorderBrush="{StaticResource DefaultTextForeground}" Padding="0,10">
+                    <TextBlock x:Uid="SaveData" Foreground="{StaticResource DefaultTextForeground}" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="SaveData0" GroupName="SaveData" x:Uid="SaveDataNo" Tag="0" Checked="RadioButtonChecked"/>
+                        <RadioButton x:Name="SaveData1" GroupName="SaveData" x:Uid="SaveDataYes" Tag="1" Checked="RadioButtonChecked"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel BorderThickness="0,0,0,1" BorderBrush="{StaticResource DefaultTextForeground}" Padding="0,10">
+                    <TextBlock x:Uid="Units" Foreground="{StaticResource DefaultTextForeground}" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="Units0" GroupName="UnitsFormat" x:Uid="Metric" Tag="metric" Checked="RadioButtonChecked" />
+                        <RadioButton x:Name="Units1" GroupName="UnitsFormat" x:Uid="Imperial" Tag="imperial" Checked="RadioButtonChecked" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Margin="0,0,0,5" BorderThickness="0,0,0,1" BorderBrush="{StaticResource DefaultTextForeground}" Padding="0,10">
+                    <TextBlock x:Uid="TimeFormat" Foreground="{StaticResource DefaultTextForeground}" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="TimeFormat0" GroupName="TimeFormat" x:Uid="24h" Tag="24h" Checked="RadioButtonChecked" />
+                        <RadioButton x:Name="TimeFormat1" GroupName="TimeFormat" x:Uid="12h" Tag="12h" Checked="RadioButtonChecked" />
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock x:Name="SavedText" x:Uid="SavedText" Width="380" TextWrapping="Wrap" Visibility="Collapsed" FontFamily="Myriad Pro" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" Margin="0,10,0,5">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:TranslationAnimation Duration="0:0:0.30" From="0, -20, 0" To="0" />
+                        <animations:OpacityAnimation Duration="0:0:0.15" From="0" To="1.0" />
+                    </animations:Implicit.ShowAnimations>
+                    <animations:Implicit.HideAnimations>
+                        <animations:ScalarAnimation Target="Opacity" Duration="0:0:0.15" To="0.0" />
+                        <animations:TranslationAnimation Duration="0:0:0.30" From="0" To="0, -20, 0" />
+                    </animations:Implicit.HideAnimations>
+                </TextBlock>
+                <TextBlock x:Name="DataError" x:Uid="DataError" Width="380" TextWrapping="Wrap" Visibility="Collapsed" FontFamily="Myriad Pro" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" Margin="0,10,0,5">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:TranslationAnimation Duration="0:0:0.30" From="0, -20, 0" To="0" />
+                        <animations:OpacityAnimation Duration="0:0:0.15" From="0" To="1.0" />
+                    </animations:Implicit.ShowAnimations>
+                    <animations:Implicit.HideAnimations>
+                        <animations:ScalarAnimation Target="Opacity" Duration="0:0:0.15" To="0.0" />
+                        <animations:TranslationAnimation Duration="0:0:0.30" From="0" To="0, -20, 0" />
+                    </animations:Implicit.HideAnimations>
+                </TextBlock>
+                <StackPanel Margin="0,5,0,0" Orientation="Vertical" HorizontalAlignment="Center">
+                    <Border CornerRadius="7">
+                        <Grid>
+                            <common:AcrylicBrush Color="{StaticResource SavedPlacesButtonBackground}"/>
+                            <Button x:Name="SaveData" Background="Transparent" Foreground="{StaticResource SavedPlacesButtonForeground}" Padding="20,7,20,10" Style="{StaticResource DefaultButton}" Click="SaveData_Click">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="18" Text="&#xE74E;" Foreground="{StaticResource SavedPlacesButtonForeground}" Margin="0,4,12,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Uid="Save" Text="Save Data" FontSize="18" FontWeight="Bold" FontFamily="Segoe UI" Foreground="{StaticResource SavedPlacesButtonForeground}"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

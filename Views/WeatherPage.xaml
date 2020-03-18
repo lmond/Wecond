@@ -1,0 +1,554 @@
+﻿<Page
+    x:Class="Wecond.Views.WeatherPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wecond.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:common="using:Wecond.Common"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    mc:Ignorable="d">
+
+    <Grid x:Name="PageGrid" Background="Transparent">
+        <Grid Canvas.ZIndex="1" x:Name="SettingsPageGrid" Visibility="Collapsed">
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.30" From="0, -200, 0" To="0" />
+                <animations:OpacityAnimation Duration="0:0:0.15" From="0" To="1.0" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:ScalarAnimation Target="Opacity" Duration="0:0:0.15" To="0.0" />
+                <animations:TranslationAnimation Duration="0:0:0.30" From="0" To="0, -200, 0" />
+            </animations:Implicit.HideAnimations>
+            <Frame x:Name="SettingsPage" />
+            <Button Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE8BB;" Margin="0,65,40,0" Click="CloseSettings_Click" Style="{StaticResource DefaultButton}"/>
+        </Grid>
+        <controls:ImageEx 
+            x:Name="Cover" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center" 
+            IsCacheEnabled="False" 
+            Stretch="UniformToFill" />
+        <Grid x:Name="MainGrid">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity=".2"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <common:AcrylicBrush Grid.ColumnSpan="2" Color="{StaticResource TopBarBackground}"/>
+                <Grid x:Name="TopBarContent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" HorizontalAlignment="Left" Margin="55,10,0,10" x:Name="AppNameGrid">
+                        <TextBlock Text="Wecond" Margin="0,-2,0,0" Foreground="{StaticResource DefaultTextForeground}" FontSize="14" FontFamily="Miryad Pro" FontWeight="Bold"/>
+                    </Grid>
+                    <Grid Grid.Column="0" HorizontalAlignment="Left" Padding="10,40,0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="GoToHome" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE80F;" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DefaultTextForeground}" Margin="0,0,0,0" Click="GoToHome_Click" Style="{StaticResource DefaultButton}"/>
+                            <AutoSuggestBox x:Uid="TopSearch" x:Name="CitiesSearch" Width="350" Background="Transparent" FontSize="24" Margin="-5,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextChanged="CitiesSearch_TextChanged" QuerySubmitted="CitiesSearch_QuerySubmitted" TextMemberPath="CityDisplayName" DisplayMemberPath="CityDisplayName" Style="{StaticResource HomePageAutoSuggestBox}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Column="1" HorizontalAlignment="Right" Padding="0,40,10,0" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="PlacesTopButton" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE707;" Foreground="{StaticResource DefaultTextForeground}" Margin="0,0,5,0" Background="Transparent" Style="{StaticResource DefaultButton}" Click="FavoritesButton_Click" />
+                            <Button x:Name="SettingsButton" Margin="-10,0" FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE713;" Foreground="{StaticResource DefaultTextForeground}" Background="Transparent" Style="{StaticResource DefaultButton}" Click="SettingsButton_Click" />
+                            <Button x:Name="ShowMore" FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE712;" Foreground="{StaticResource DefaultTextForeground}" Background="Transparent" Style="{StaticResource DefaultButton}" Margin="5,0,0,0">
+                                <Button.Flyout>
+                                    <Flyout Placement="Bottom">
+                                        <ListView x:Name="AvailableActions" SelectionMode="None" IsItemClickEnabled="True" ItemClick="AvailableActions_ItemClick" Style="{StaticResource HomeAutoSuggestBoxListViewStyle}" FontFamily="Segoe MDL2 Assets">
+                                            <ListViewItem x:Name="SetAsHome" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="SetHome">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE80F;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="SetAsHome" FontFamily="Miryad Pro" FontSize="16" Margin="10,4,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="SaveToFavorites" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="Favorite">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE1CE;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="SaveToFavorites" FontFamily="Miryad Pro" FontSize="16" Margin="10,2,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="RemoveFromFavorites" Visibility="Collapsed" Padding="10,0,15,0">
+                                                <StackPanel Orientation="Horizontal" Tag="UnFavorite">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE00A;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="RemoveFromFavorites" FontFamily="Miryad Pro" FontSize="16" Margin="10,2,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="PinToStart" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="Pin">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE718;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="PinToStart" FontFamily="Miryad Pro" FontSize="16" Margin="10,2,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="UnPinFromStart" Visibility="Collapsed" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="UnPin">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE77A;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="UnPinFromStart" FontFamily="Miryad Pro" FontSize="16" Margin="10,2,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="DownloadCover" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="Download">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE896;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="DownloadCover" FontFamily="Miryad Pro" FontSize="16" Margin="10,4,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="RateApp" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="Rate">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE735;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="RateApp" FontFamily="Miryad Pro" FontSize="16" Margin="10,4,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                            <ListViewItem x:Name="Feedback" Padding="10,0,20,0">
+                                                <StackPanel Orientation="Horizontal" Tag="Feedback">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="24" Text="&#xE939;" Foreground="{StaticResource DefaultTextForeground}" />
+                                                    <TextBlock x:Uid="Feedback" FontFamily="Miryad Pro" FontSize="16" Margin="10,4,0,0" Foreground="{StaticResource DefaultTextForeground}" />
+                                                </StackPanel>
+                                            </ListViewItem>
+                                        </ListView>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid x:Name="TopGrid" Grid.Row="1" Margin="0,0,0,10">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="TodayForecastTop">
+                    <common:AcrylicBrush Color="{StaticResource CurrentWeatherBackground}"/>
+                    <StackPanel Orientation="Vertical" Padding="20">
+                        <Grid HorizontalAlignment="Center" Grid.Row="0" Margin="20,0">
+                            <StackPanel Orientation="Horizontal" x:Name="PlaceInfoStack">
+                                <TextBlock x:Name="CurrentPlaceName" Text="" Foreground="{StaticResource DefaultTextForeground}" FontSize="48" FontFamily="Myriad Pro" FontWeight="Bold" Margin="0" />
+                                <Image x:Name="CountryFlag" Height="22" Margin="5,-10,0,0" Opacity=".6" />
+                            </StackPanel>
+                        </Grid>
+                        <Grid HorizontalAlignment="Center" Grid.Row="1" Margin="0,0,0,20">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical" Margin="0,0,30,0">
+                                    <TextBlock FontSize="72" HorizontalAlignment="Center" FontFamily="Segoe UI" Foreground="{StaticResource DefaultTextForeground}" Margin="0,-15,0,0">
+                                        <Run Text="{Binding Current.main.temp, FallbackValue='11'}"/>°
+                                    </TextBlock>
+                                    <Border BorderThickness="0" CornerRadius="7">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity="0.5"/>
+                                        </Border.Background>
+                                        <TextBlock Text="{Binding Current.Date, FallbackValue='Fri, 08 Dec'}" Padding="10,8" Foreground="{StaticResource SecondaryTextForeground}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="0,-5,0,0">
+                                    <Image Source="{Binding Current.Image, FallbackValue='ms-appx:///Assets/Icons/01d.png'}" Width="90"/>
+                                    <TextBlock  Text="{Binding Current.weather[0].description, FallbackValue=Clouds, TargetNullValue=Clouds}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock FontSize="14" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,15,0">
+                                <Run x:Uid="Wind" FontWeight="Bold" />
+                                <Run Text="{Binding Current.wind.speed}"/>
+                            </TextBlock>
+                            <TextBlock FontSize="14" Foreground="{StaticResource DefaultTextForeground}" Margin="0,0,15,0">
+                                <Run x:Uid="Humidity" FontWeight="Bold" />
+                                <Run Text="{Binding Current.main.humidity}"/>%
+                            </TextBlock>
+                            <TextBlock FontSize="14" Foreground="{StaticResource DefaultTextForeground}">
+                                <Run x:Uid="Visibility" FontWeight="Bold" />
+                                <Run Text="{Binding Current.visibility}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock FontSize="14" Foreground="{StaticResource DefaultTextForeground}" Margin="0,0,15,0">
+                                <Run x:Uid="Pressure" FontWeight="Bold" />
+                                <Run Text="{Binding Current.main.pressure}"/>
+                            </TextBlock>
+                            <TextBlock FontSize="14" Foreground="{StaticResource DefaultTextForeground}">
+                                <Run x:Uid="SunriseSunset" FontWeight="Bold" />
+                                <Run Text="{Binding Current.SunriseSunset}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <RelativePanel Grid.Row="1">
+                <Grid x:Name="SavedPlacesGrid" HorizontalAlignment="Right" Margin="0,0,0,30" VerticalAlignment="Center" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <StackPanel Orientation="Vertical" x:Name="SavedPlacesButtonPanel">
+                        <Border CornerRadius="7,0,0,7" HorizontalAlignment="Right" x:Name="SavedPlaces" Visibility="Visible">
+                            <Grid>
+                                <common:AcrylicBrush Color="{StaticResource SavedPlacesButtonBackground}" />
+                                <Button x:Name="SavedPlacesButton" Background="Transparent" Padding="20,7,20,10" Style="{StaticResource DefaultButton}" Click="FavoritesButton_Click">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="18" Text="&#xE707;" Foreground="{StaticResource SavedPlacesButtonForeground}" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                            <TextBlock x:Uid="SavedPlaces" FontSize="18" FontWeight="Bold" FontFamily="Segoe UI" Foreground="{StaticResource SavedPlacesButtonForeground}"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+                <!--Button x:Name="CoverCoprightInfoButton" Visibility="Collapsed" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Margin="0" Padding="0" Style="{StaticResource DefaultButton}" Background="Transparent">
+                    <Button.Content>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="18" Text="&#xE946;" Foreground="#F2ECE1" Margin="10" VerticalAlignment="Center" />
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout FlyoutPresenterStyle="{StaticResource CoverInfoFlyout}" Placement="Right">
+                            <Grid>
+                                <common:AcrylicBrush Color="{StaticResource NewsItemsBackground}"/>
+                                <StackPanel Orientation="Horizontal" Padding="10,10,10,10">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="18" Text="&#xE946;" Foreground="{StaticResource DefaultTextForeground}" VerticalAlignment="Center" />
+                                    <TextBlock x:Uid="ImageBy" FontFamily="Myriad Pro" FontSize="14" Foreground="{StaticResource DefaultTextForeground}" Margin="10,4,3,0" VerticalAlignment="Center" />
+                                    <HyperlinkButton x:Name="UserLink" FontFamily="Myriad Pro" FontSize="14" Foreground="{StaticResource DefaultTextForeground}" Content="{Binding CoverOwnerUsername}" NavigateUri="{Binding CoverOwnerProfileLink}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,4,0,0" />
+                                    <TextBlock x:Uid="OnFlickr" FontFamily="Myriad Pro" FontSize="14" Foreground="{StaticResource DefaultTextForeground}" Margin="3,4,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button-->
+                <TextBlock RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" Margin="0,15,20,0" Foreground="#F2ECE1" FontSize="11" FontFamily="Miryad Pro">
+                    <Run x:Uid="LastUpdated"/>
+                    <Run x:Name="LastUpdateTime" Text="{Binding LastUpdate}"/>
+                </TextBlock>
+                <Grid RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignTopWithPanel="True" x:Name="ActionTextGrid" Visibility="Collapsed" Margin="0,-10,0,0">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:TranslationAnimation Duration="0:0:0.30" From="0, -20, 0" To="0" />
+                        <animations:OpacityAnimation Duration="0:0:0.15" From="0" To="1.0" />
+                    </animations:Implicit.ShowAnimations>
+                    <animations:Implicit.HideAnimations>
+                        <animations:ScalarAnimation Target="Opacity" Duration="0:0:0.15" To="0.0" />
+                        <animations:TranslationAnimation Duration="0:0:0.30" From="0" To="0, -20, 0" />
+                    </animations:Implicit.HideAnimations>
+                    <common:AcrylicBrush Color="{StaticResource TopBarBackground}"/>
+                    <TextBlock x:Name="ActionText" FontFamily="Myriad Pro" FontSize="14" Padding="20,5" Foreground="{StaticResource DefaultTextForeground}"/>
+                </Grid>
+            </RelativePanel>
+            <Grid x:Name="BottomGrid" Grid.Row="2" Height="215">
+                <Pivot x:Name="BottomItemsPivot">
+                    <PivotItem Margin="0" x:Name="DailyForecastPivot">
+                        <PivotItem.Header>
+                            <StackPanel x:Name="ForecastItemsPanel" Orientation="Vertical" MaxWidth="200">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10" Padding="10,0">
+                                    <TextBlock Text="&#xE706;" FontSize="18" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
+                                    <TextBlock x:Uid="Weather" FontSize="14" VerticalAlignment="Center" FontFamily="Myriad Pro" Margin="10,5,0,0" />
+                                </StackPanel>
+                                <common:AcrylicBrush Height="10" Color="{StaticResource WeatherForecastHeaderBackground}"/>
+                            </StackPanel>
+                        </PivotItem.Header>
+                        <PivotItem.Content>
+                            <Grid Height="190">
+                                <common:AcrylicBrush Color="{StaticResource WeatherForecastBackground}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition x:Name="TodayForecastBottom" Width="320"/>
+                                        <ColumnDefinition x:Name="FutureForecast" Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0" Margin="0,-15,0,0">
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Vertical" Margin="0,0,30,0">
+                                                    <TextBlock FontSize="72" HorizontalAlignment="Center" FontFamily="Segoe UI" Foreground="{StaticResource DefaultTextForeground}" Margin="0,-15,0,0">
+                                                        <Run Text="{Binding Current.main.temp}"/>°
+                                                    </TextBlock>
+                                                    <Border BorderThickness="0" CornerRadius="7">
+                                                        <Border.Background>
+                                                            <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity="0.5"/>
+                                                        </Border.Background>
+                                                        <TextBlock Text="{Binding Current.Date}" Padding="10,8" Foreground="{StaticResource SecondaryTextForeground}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical" Margin="0,-5,0,0">
+                                                    <Image Source="{Binding Current.Image}" Width="90"/>
+                                                    <TextBlock Text="{Binding Current.weather[0].description}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <controls:AdaptiveGridView 
+                                            x:Name="ForecastItems"
+                                            OneRowModeEnabled="True"
+                                            DesiredWidth="140"
+                                            ItemHeight="190"
+                                            SelectionMode="None"
+                                            ItemsSource="{Binding DailyForecast.list}"
+                                            IsItemClickEnabled="False">
+                                            <controls:AdaptiveGridView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="1,0,0,0" Margin="0,-15,0,0">
+                                                        <Border.BorderBrush>
+                                                            <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity="0.2"/>
+                                                        </Border.BorderBrush>
+                                                        <Grid Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,40,0,0">
+                                                            <StackPanel Orientation="Vertical">
+                                                                <Border BorderThickness="0" CornerRadius="7" Width="40">
+                                                                    <Border.Background>
+                                                                        <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity="0.5"/>
+                                                                    </Border.Background>
+                                                                    <TextBlock Text="{Binding Day}" FontSize="11" Padding="8,5" Foreground="{StaticResource SecondaryTextForeground}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                                                                </Border>
+                                                                <Image Source="{Binding Image}" Width="50" HorizontalAlignment="Center" Margin="0,5,0,0" />
+                                                                <TextBlock Text="{Binding weather[0].description, FallbackValue=Clouds, TargetNullValue=Clouds}" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="14" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                <TextBlock Foreground="{StaticResource DefaultTextForeground}" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">
+                                                                    <Run Text="{Binding temp.min}"/>°<Run Text=" / "/><Run Text="{Binding temp.max}"/>°
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </controls:AdaptiveGridView.ItemTemplate>
+                                        </controls:AdaptiveGridView>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </PivotItem.Content>
+                    </PivotItem>
+                    <PivotItem Margin="0" x:Name="HourlyForecastPivot">
+                        <PivotItem.Header>
+                            <StackPanel x:Name="HourlyItemsPanel" Orientation="Vertical" MaxWidth="200">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10" Padding="10,0">
+                                    <TextBlock Text="&#xEC92;" FontSize="18" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" />
+                                    <TextBlock x:Uid="Hourly" FontSize="14" VerticalAlignment="Center" FontFamily="Myriad Pro" Margin="10,5,0,0" />
+                                </StackPanel>
+                                <common:AcrylicBrush Height="10" Color="{StaticResource HourlyItemsHeaderBackground}"/>
+                            </StackPanel>
+                        </PivotItem.Header>
+                        <PivotItem.Content>
+                            <Grid Height="190">
+                                <common:AcrylicBrush Color="{StaticResource HourlyItemsBackground}"/>
+                                <controls:AdaptiveGridView 
+                                    x:Name="HourlyItems"
+                                    OneRowModeEnabled="True"
+                                    DesiredWidth="140"
+                                    ItemHeight="190"
+                                    SelectionMode="None"
+                                    ItemsSource="{Binding Hourly.list}"
+                                    IsItemClickEnabled="False">
+                                    <controls:AdaptiveGridView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,0" Margin="0,-15,0,0">
+                                                <Border.BorderBrush>
+                                                    <SolidColorBrush Color="#e6e6e6" Opacity="0.2"/>
+                                                </Border.BorderBrush>
+                                                <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,40,0,0">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Border BorderThickness="0" CornerRadius="7" Width="60">
+                                                            <Border.Background>
+                                                                <SolidColorBrush Color="{StaticResource DefaultBorderBackground}" Opacity="0.5"/>
+                                                            </Border.Background>
+                                                            <TextBlock Text="{Binding Date}" FontSize="11" Padding="8,5" Foreground="{StaticResource SecondaryTextForeground}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                                                        </Border>
+                                                        <Image Source="{Binding Image}" Width="50" HorizontalAlignment="Center" Margin="0,5,0,0" />
+                                                        <TextBlock Text="{Binding weather[0].description, FallbackValue=Clouds, TargetNullValue=Clouds}" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="14" Foreground="{StaticResource DefaultTextForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        <TextBlock Foreground="{StaticResource DefaultTextForeground}" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">
+                                                            <Run Text="{Binding main.temp}"/>°
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </controls:AdaptiveGridView.ItemTemplate>
+                                </controls:AdaptiveGridView>
+                            </Grid>
+                        </PivotItem.Content>
+                    </PivotItem>
+                    <PivotItem Margin="0" x:Name="NewsPivot">
+                        <PivotItem.Header>
+                            <StackPanel x:Name="NewsItemsPanel" Orientation="Vertical" MaxWidth="200">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10" Padding="10,0">
+                                    <TextBlock Text="&#xE12A;" FontSize="18" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" />
+                                    <TextBlock x:Uid="News" FontSize="14" VerticalAlignment="Center" FontFamily="Myriad Pro" Margin="10,5,0,0" />
+                                </StackPanel>
+                                <common:AcrylicBrush Height="10" Color="{StaticResource NewsItemsHeaderBackground}"/>
+                            </StackPanel>
+                        </PivotItem.Header>
+                        <PivotItem.Content>
+                            <Grid Background="Transparent" Height="190">
+                                <common:AcrylicBrush Color="{StaticResource NewsItemsBackground}"/>
+                                <Grid Padding="10">
+                                    <controls:AdaptiveGridView 
+                                            Name="NewsData"
+                                            OneRowModeEnabled="True"
+                                            ItemHeight="170"
+                                            DesiredWidth="180"
+                                            SelectionMode="None"
+                                            ItemClick="NewsData_ItemClick"
+                                            ShowsScrollingPlaceholders="False"
+                                            IsItemClickEnabled="True">
+                                        <controls:AdaptiveGridView.ItemTemplate>
+                                            <DataTemplate>
+                                                <controls:DropShadowPanel
+                                                    BlurRadius="10"
+                                                    ShadowOpacity="0.4"
+                                                    OffsetX="1"
+                                                    OffsetY="1"
+                                                    Color="Black"
+                                                    VerticalAlignment="Top"
+                                                    HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <controls:ImageEx 
+                                                            Height="90"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            IsCacheEnabled="False"
+                                                            PlaceholderSource="ms-appx:///Assets/LargeTile.scale-400.png"
+                                                            PlaceholderStretch="Uniform"
+                                                            Source="{Binding urlToImage}"
+                                                            Stretch="UniformToFill" />
+                                                        <Grid>
+                                                            <common:AcrylicBrush Color="{StaticResource NewsItemsBackground}"/>
+                                                            <StackPanel Orientation="Vertical">
+                                                                <TextBlock 
+                                                                    Text="{Binding title}" 
+                                                                    Foreground="{StaticResource DefaultTextForeground}"
+                                                                    FontSize="12"
+                                                                    TextTrimming="CharacterEllipsis"
+                                                                    FontWeight="Bold"
+                                                                    Margin="5"/>
+                                                                <TextBlock 
+                                                                    Text="{Binding description}" 
+                                                                    Foreground="{StaticResource DefaultTextForeground}" 
+                                                                    FontSize="12" 
+                                                                    TextWrapping="Wrap" 
+                                                                    TextTrimming="CharacterEllipsis"
+                                                                    MaxLines="2" 
+                                                                    Margin="5,0,5,5"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </StackPanel>
+                                                </controls:DropShadowPanel>
+                                            </DataTemplate>
+                                        </controls:AdaptiveGridView.ItemTemplate>
+                                    </controls:AdaptiveGridView>
+                                </Grid>
+                            </Grid>
+                        </PivotItem.Content>
+                    </PivotItem>
+                    <PivotItem Margin="0" x:Name="GalleryPivot">
+                        <PivotItem.Header>
+                            <StackPanel x:Name="GalleryItemsPanel" Orientation="Vertical" MaxWidth="200">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10" Padding="10,0">
+                                    <TextBlock Text="&#xE158;" FontSize="18" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" />
+                                    <TextBlock x:Uid="Gallery" FontSize="14" VerticalAlignment="Center" FontFamily="Myriad Pro" Margin="10,5,0,0" />
+                                </StackPanel>
+                                <common:AcrylicBrush Height="10" Color="{StaticResource GalleryItemsHeaderBackground}"/>
+                            </StackPanel>
+                        </PivotItem.Header>
+                        <PivotItem.Content>
+                            <Grid Background="Transparent" Height="190">
+                                <Grid Canvas.ZIndex="-1" Background="Transparent">
+                                    <common:AcrylicBrush Color="{StaticResource GalleryItemsBackground}"/>
+                                    <Grid Padding="10">
+                                        <controls:AdaptiveGridView 
+                                                Name="CityImages"
+                                                OneRowModeEnabled="True"
+                                                ItemHeight="173"
+                                                DesiredWidth="200"
+                                                SelectionMode="None"
+                                                ItemClick="CityImages_ItemClick"
+                                                IsItemClickEnabled="True">
+                                            <controls:AdaptiveGridView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <controls:DropShadowPanel
+                                                        BlurRadius="10"
+                                                        ShadowOpacity=".4"
+                                                        OffsetX="1"
+                                                        OffsetY="1"
+                                                        Color="Black"
+                                                        VerticalAlignment="Top"
+                                                        HorizontalAlignment="Center">
+                                                        <Grid Background="Transparent" Margin="0,0,0,20">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="*"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                            </Grid.RowDefinitions>
+                                                            <controls:ImageEx 
+                                                                Grid.RowSpan="2"
+                                                                Height="170" 
+                                                                HorizontalAlignment="Center" 
+                                                                VerticalAlignment="Center" 
+                                                                IsCacheEnabled="False" 
+                                                                PlaceholderSource="ms-appx:///Assets/LargeTile.scale-400.png" 
+                                                                PlaceholderStretch="UniformToFill" 
+                                                                Source="{Binding ThumbnailAddress}"
+                                                                Stretch="UniformToFill" />
+                                                            <Grid Grid.Row="1" Background="Transparent">
+                                                                <common:AcrylicBrush Color="{StaticResource GalleryItemsBackground}"/>
+                                                                <Button Foreground="{StaticResource DefaultTextForeground}" Margin="5,5,5,5" Background="Transparent" Style="{StaticResource DefaultButton}" Click="DownloadImage_Click" Tag="{Binding ImageAddress}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                    <Button.Content>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE896;" Margin="0,0,7,0" FontWeight="Bold" />
+                                                                            <TextBlock x:Uid="Download" FontFamily="Miryad Pro" FontSize="14" FontWeight="Bold" Margin="0,-2,0,0" />
+                                                                        </StackPanel>
+                                                                    </Button.Content>
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </controls:DropShadowPanel>
+                                                </DataTemplate>
+                                            </controls:AdaptiveGridView.ItemTemplate>
+                                        </controls:AdaptiveGridView>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </PivotItem.Content>
+                    </PivotItem>
+                </Pivot>
+            </Grid>
+        </Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlacesTopButton.Visibility" Value="Visible" />
+                        <Setter Target="SavedPlaces.Visibility" Value="Collapsed" />
+                        <Setter Target="TodayForecastBottom.Width" Value="280" />
+                        <Setter Target="TodayForecastTop.Visibility" Value="Collapsed" />
+                        <Setter Target="CitiesSearch.Text" Value="{Binding PlaceInfo.DisplayName}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlacesTopButton.Visibility" Value="Visible" />
+                        <Setter Target="SavedPlaces.Visibility" Value="Collapsed" />
+                        <Setter Target="TodayForecastBottom.Width" Value="0" />
+                        <Setter Target="TodayForecastTop.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlacesTopButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SavedPlaces.Visibility" Value="Visible" />
+                        <Setter Target="TodayForecastBottom.Width" Value="0" />
+                        <Setter Target="TodayForecastTop.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlacesTopButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SavedPlaces.Visibility" Value="Visible" />
+                        <Setter Target="TodayForecastBottom.Width" Value="320" />
+                        <Setter Target="TodayForecastTop.Visibility" Value="Collapsed" />
+                        <Setter Target="CitiesSearch.Text" Value="{Binding PlaceInfo.DisplayName}"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</Page>

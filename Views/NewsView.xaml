@@ -1,0 +1,27 @@
+﻿<Page
+    x:Class="Wecond.Views.NewsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wecond.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <Grid Canvas.ZIndex="-1" Background="Transparent">
+            <Grid>
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:Blur Value="11" Duration="0" Delay="0" AutomaticallyStart="true"/>
+                </interactivity:Interaction.Behaviors>
+                <Grid.Background>
+                    <SolidColorBrush Color="#f2eaed" Opacity="0.5"/>
+                </Grid.Background>
+            </Grid>
+            <Grid Padding="40,80">
+                <WebView x:Name="NewsItemView"></WebView>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
